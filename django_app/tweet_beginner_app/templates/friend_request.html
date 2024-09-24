@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block title %} Friend Requests {% endblock title %}
+{% load static %}
+{% block content %}
+
+<h1 class="text-center mt-4">Friend Requests</h1>
+
+<ul class="list-group">
+  {% for request in user.received_requests.all %}
+  <li class="list-group-item d-flex align-items-center border p-3 mb-2"> <!-- Add 'mb-2' for spacing between requests -->
+    <img
+        src="{% static 'images/png_goku.jpg' %}"
+        alt="userprofile"
+        width="50px"
+        height="50px"
+        class="rounded-circle me-3"
+    />
+    <span class="flex-grow-1">
+      <strong>{{ request.from_user.username }}</strong> wants to be your friend
+    </span>
+
+    <div class="d-flex">
+      <a href="{% url 'accept_friend_request' request.id %}" class="btn btn-primary btn-sm me-2">Accept</a> <!-- Spacing between buttons -->
+      <a href="{% url 'delete_friend_request' request.id %}" class="btn btn-danger btn-sm">Delete</a>
+    </div>
+  </li>
+  {% empty %}
+  <li class="list-group-item">No friend requests.</li>
+  {% endfor %}
+</ul>
+
+<h2 class="text-center mt-4">Friends List</h2>
+
+<div class="row g-1">  <!-- Bootstrap row with 4px gap (g-1 is 4px gap) -->
+    {% for friend in friends %}
+    <div class="col-12"> <!-- Make each friend item take up the full width of the row (col-12) -->
+        <ul class="list-group">
+            <li class="list-group-item d-flex align-items-center border p-3">
+                <img
+                    src="{% static 'images/png_goku.jpg' %}"
+                    alt="userprofile"
+                    width="50px"
+                    height="50px"
+                    class="me-2"
+                />
+                <span class="flex-grow-1">{{ friend.username }}</span>
+            </li>
+        </ul>
+    </div>
+    {% empty %}
+        <li>No friends found.</li>
+    {% endfor %}
+</div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if friends.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ friends.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ friends.number }} of {{ friends.paginator.num_pages }}.
+            </span>
+
+            {% if friends.has_next %}
+                <a href="?page={{ friends.next_page_number }}">next</a>
+                <a href="?page={{ friends.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+
+
+{% endblock content %}
